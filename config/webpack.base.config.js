@@ -6,7 +6,7 @@ const config = {
     entry: resolve('../main.js'),
     output: {
         path: resolve('../dist/'),
-        filename: 'simple.js'
+        filename: 'pro.js'
     },
     module: {
         rules: [{
