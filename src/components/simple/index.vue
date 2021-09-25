@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
     <div
         :class="`markdown ${fullscreen ? 'fullscreen' : ''} ${bordered ? 'border' : ''}`"
         ref="markdown"

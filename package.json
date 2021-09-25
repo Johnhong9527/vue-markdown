@@ -1,7 +1,7 @@
 {
     "name": "vue-meditor",
     "description": "一款使用marked和highlight.js开发的一款markdown编辑器",
-    "version": "2.1.0",
+    "version": "2.2.0",
     "author": "zhaoxuhui<1258835133@qq.com>",
     "license": "MIT",
     "private": false,
@@ -12,8 +12,13 @@
         "vue 编辑器",
         "vue codemirror"
     ],
+    "contributors": [
+        "洪海涛 <1310512423@qq.com>"
+    ],
     "scripts": {
         "dev": "vite",
+        "vitebuild": "vite build && cp index.js ./dist/index.js",
+        "serve": "vite preview",
         "start": "webpack-dev-server --config ./config/webpack.dev.config.js --quite",
         "build": "webpack --config ./config/webpack.config.js --quite",
         "analyzer": "cross-env analyzer=1 webpack --config ./config/webpack.config.js --quite",
@@ -46,6 +51,7 @@
         "uglifyjs-webpack-plugin": "^2.2.0",
         "url-loader": "^2.2.0",
         "vite": "^2.5.10",
+        "vite-plugin-copy": "^0.1.6",
         "vite-plugin-vue2": "^1.8.2",
         "vue": "^2.6.10",
         "vue-loader": "^15.7.1",
@@ -56,14 +62,17 @@
         "webpack-cli": "^3.3.10",
         "webpack-dashboard": "^3.2.0",
         "webpack-dev-server": "^3.9.0",
-        "webpack-merge": "^4.2.2"
+        "webpack-merge": "^4.2.2",
+        "axios": "^0.19.2",
+        "vue-style-loader": "^4.1.3"
     },
     "repository": {
         "type": "git",
         "url": "https://github.com/zhaoxuhui1122/vue-markdown"
     },
     "homepage": "https://github.com/webpack/webpack",
-    "dependencies": {
+    "peerDependencies": {
+        "axios": "^0.19.2",
         "vue-style-loader": "^4.1.3"
     }
 }

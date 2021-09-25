@@ -3,6 +3,7 @@ lockfileVersion: 5.3
 specifiers:
   '@babel/core': ^7.6.4
   '@babel/preset-env': ^7.6.3
+  axios: ^0.19.2
   babel-loader: ^8.0.6
   clean-webpack-plugin: ^3.0.0
   copy-webpack-plugin: ^5.0.4
@@ -23,6 +24,7 @@ specifiers:
   uglifyjs-webpack-plugin: ^2.2.0
   url-loader: ^2.2.0
   vite: ^2.5.10
+  vite-plugin-copy: ^0.1.6
   vite-plugin-vue2: ^1.8.2
   vue: ^2.6.10
   vue-loader: ^15.7.1
@@ -36,12 +38,10 @@ specifiers:
   webpack-dev-server: ^3.9.0
   webpack-merge: ^4.2.2
 
-dependencies:
-  vue-style-loader: 4.1.3
-
 devDependencies:
   '@babel/core': 7.15.5
   '@babel/preset-env': 7.15.6_@babel+core@7.15.5
+  axios: 0.19.2
   babel-loader: 8.2.2_99877201e3f6dd5396b321f0a88244ea
   clean-webpack-plugin: 3.0.0_webpack@4.46.0
   copy-webpack-plugin: 5.1.2_webpack@4.46.0
@@ -62,10 +62,12 @@ devDependencies:
   uglifyjs-webpack-plugin: 2.2.0_webpack@4.46.0
   url-loader: 2.3.0_file-loader@4.3.0+webpack@4.46.0
   vite: 2.5.10
+  vite-plugin-copy: 0.1.6
   vite-plugin-vue2: 1.8.2_6dad47b67adb7159003ec3f38cde13e0
   vue: 2.6.14
   vue-loader: 15.9.8_e15c8784917900cf55a453471769391c
   vue-meditor: 1.5.2
+  vue-style-loader: 4.1.3
   vue-template-compiler: 2.6.14
   webpack: 4.46.0_webpack-cli@3.3.12
   webpack-bundle-analyzer: 3.9.0
@@ -1236,6 +1238,27 @@ packages:
       to-fast-properties: 2.0.0
     dev: true
 
+  /@nodelib/fs.scandir/2.1.5:
+    resolution: {integrity: sha1-dhnC6yGyVIP20WdUi0z9WnSIw9U=, tarball: '@nodelib/fs.scandir/download/@nodelib/fs.scandir-2.1.5.tgz'}
+    engines: {node: '>= 8'}
+    dependencies:
+      '@nodelib/fs.stat': 2.0.5
+      run-parallel: 1.2.0
+    dev: true
+
+  /@nodelib/fs.stat/2.0.5:
+    resolution: {integrity: sha1-W9Jir5Tp0lvR5xsF3u1Eh2oiLos=, tarball: '@nodelib/fs.stat/download/@nodelib/fs.stat-2.0.5.tgz'}
+    engines: {node: '>= 8'}
+    dev: true
+
+  /@nodelib/fs.walk/1.2.8:
+    resolution: {integrity: sha1-6Vc36LtnRt3t9pxVaVNJTxlv5po=, tarball: '@nodelib/fs.walk/download/@nodelib/fs.walk-1.2.8.tgz'}
+    engines: {node: '>= 8'}
+    dependencies:
+      '@nodelib/fs.scandir': 2.1.5
+      fastq: 1.13.0
+    dev: true
+
   /@rollup/pluginutils/4.1.1:
     resolution: {integrity: sha1-HU2obdTt7RVlalfZM/2iuaCNR+w=, tarball: '@rollup/pluginutils/download/@rollup/pluginutils-4.1.1.tgz'}
     engines: {node: '>= 8.0.0'}
@@ -1795,6 +1818,13 @@ packages:
     hasBin: true
     dev: true
 
+  /axios/0.19.2:
+    resolution: {integrity: sha1-PqNsXYgY0NX4qKl6bTa4bNwAyyc=, tarball: axios/download/axios-0.19.2.tgz}
+    deprecated: Critical security vulnerability fixed in v0.21.1. For more information, see https://github.com/axios/axios/pull/3410
+    dependencies:
+      follow-redirects: 1.5.10
+    dev: true
+
   /babel-code-frame/6.26.0:
     resolution: {integrity: sha1-Y/1D99weO7fONZR9uP42mj9Yx0s=, tarball: babel-code-frame/download/babel-code-frame-6.26.0.tgz}
     dependencies:
@@ -2310,6 +2340,7 @@ packages:
 
   /big.js/5.2.2:
     resolution: {integrity: sha1-ZfCvOC9Xi83HQr2cKB6cstd2gyg=, tarball: big.js/download/big.js-5.2.2.tgz}
+    dev: true
 
   /binary-extensions/1.13.1:
     resolution: {integrity: sha1-WYr+VHVbKGilMw0q/51Ou1Mgm2U=, tarball: binary-extensions/download/binary-extensions-1.13.1.tgz}
@@ -2401,7 +2432,6 @@ packages:
     dependencies:
       fill-range: 7.0.1
     dev: true
-    optional: true
 
   /brorand/1.1.0:
     resolution: {integrity: sha1-EsJe/kCkXjwyPrhnWgoM5XsiNx8=, tarball: brorand/download/brorand-1.1.0.tgz}
@@ -3256,6 +3286,12 @@ packages:
       ms: 2.0.0
     dev: true
 
+  /debug/3.1.0:
+    resolution: {integrity: sha1-W7WgZyYotkFJVmuhaBnmFRjGcmE=, tarball: debug/download/debug-3.1.0.tgz}
+    dependencies:
+      ms: 2.0.0
+    dev: true
+
   /debug/3.2.7:
     resolution: {integrity: sha1-clgLfpFF+zm2Z2+cXl+xALk0F5o=, tarball: debug/download/debug-3.2.7.tgz}
     dependencies:
@@ -3544,6 +3580,7 @@ packages:
   /emojis-list/3.0.0:
     resolution: {integrity: sha1-VXBmIEatKeLpFucariYKvf9Pang=, tarball: emojis-list/download/emojis-list-3.0.0.tgz}
     engines: {node: '>= 4'}
+    dev: true
 
   /encodeurl/1.0.2:
     resolution: {integrity: sha1-rT/0yG7C0CkyL1oCw6mmBslbP1k=, tarball: encodeurl/download/encodeurl-1.0.2.tgz}
@@ -3981,12 +4018,29 @@ packages:
     resolution: {integrity: sha1-On1WtVnWy8PrUSMlJE5hmmXGxSU=, tarball: fast-deep-equal/download/fast-deep-equal-3.1.3.tgz}
     dev: true
 
+  /fast-glob/3.2.7:
+    resolution: {integrity: sha1-/Wy3otfpqnp4RhEehaGW1rL3ZqE=, tarball: fast-glob/download/fast-glob-3.2.7.tgz}
+    engines: {node: '>=8'}
+    dependencies:
+      '@nodelib/fs.stat': 2.0.5
+      '@nodelib/fs.walk': 1.2.8
+      glob-parent: 5.1.2
+      merge2: 1.4.1
+      micromatch: 4.0.4
+    dev: true
+
   /fast-json-stable-stringify/2.1.0:
     resolution: {integrity: sha1-h0v2nG9ATCtdmcSBNBOZ/VWJJjM=, tarball: fast-json-stable-stringify/download/fast-json-stable-stringify-2.1.0.tgz}
     dev: true
 
   /fast-levenshtein/2.0.6:
     resolution: {integrity: sha1-PYpcZog6FqMMqGQ+hR8Zuqd5eRc=, tarball: fast-levenshtein/download/fast-levenshtein-2.0.6.tgz}
+    dev: true
+
+  /fastq/1.13.0:
+    resolution: {integrity: sha1-YWdg+Ip1Jr38WWt8q4wYk4w2uYw=, tarball: fastq/download/fastq-1.13.0.tgz}
+    dependencies:
+      reusify: 1.0.4
     dev: true
 
   /faye-websocket/0.11.4:
@@ -4056,7 +4110,6 @@ packages:
     dependencies:
       to-regex-range: 5.0.1
     dev: true
-    optional: true
 
   /finalhandler/1.1.2:
     resolution: {integrity: sha1-t+fQAP/RGTjQ/bBTUG9uur6fWH0=, tarball: finalhandler/download/finalhandler-1.1.2.tgz}
@@ -4168,6 +4221,13 @@ packages:
         optional: true
     dependencies:
       debug: 4.3.2_supports-color@6.1.0
+    dev: true
+
+  /follow-redirects/1.5.10:
+    resolution: {integrity: sha1-e3qfmuov3/NnhqlP9kPtB/T/Xio=, tarball: follow-redirects/download/follow-redirects-1.5.10.tgz}
+    engines: {node: '>=4.0'}
+    dependencies:
+      debug: 3.1.0
     dev: true
 
   /for-in/1.0.2:
@@ -4517,6 +4577,7 @@ packages:
 
   /hash-sum/1.0.2:
     resolution: {integrity: sha1-M7QHd3VMZDJXPBIMw4CLvRDUfwQ=, tarball: hash-sum/download/hash-sum-1.0.2.tgz}
+    dev: true
 
   /hash-sum/2.0.0:
     resolution: {integrity: sha1-gdAbtd6OpKIUrV1urRtSNGCwtFo=, tarball: hash-sum/download/hash-sum-2.0.0.tgz}
@@ -5087,7 +5148,6 @@ packages:
     resolution: {integrity: sha1-dTU0W4lnNNX4DE0GxQlVUnoU8Ss=, tarball: is-number/download/is-number-7.0.0.tgz}
     engines: {node: '>=0.12.0'}
     dev: true
-    optional: true
 
   /is-obj/2.0.0:
     resolution: {integrity: sha1-Rz+wXZc3BeP9liBUUBjKjiLvSYI=, tarball: is-obj/download/is-obj-2.0.0.tgz}
@@ -5243,6 +5303,7 @@ packages:
     hasBin: true
     dependencies:
       minimist: 1.2.5
+    dev: true
 
   /json5/2.2.0:
     resolution: {integrity: sha1-Lf7+cgxrpSXZ69kJlQ8FFTFsiaM=, tarball: json5/download/json5-2.2.0.tgz}
@@ -5368,6 +5429,7 @@ packages:
       big.js: 5.2.2
       emojis-list: 3.0.0
       json5: 1.0.1
+    dev: true
 
   /locate-path/3.0.0:
     resolution: {integrity: sha1-2+w7OrdZdYBxtY/ln8QYca8hQA4=, tarball: locate-path/download/locate-path-3.0.0.tgz}
@@ -5512,6 +5574,11 @@ packages:
       source-map: 0.6.1
     dev: true
 
+  /merge2/1.4.1:
+    resolution: {integrity: sha1-Q2iJL4hekHRVpv19xVwMnUBJkK4=, tarball: merge2/download/merge2-1.4.1.tgz}
+    engines: {node: '>= 8'}
+    dev: true
+
   /methods/1.1.2:
     resolution: {integrity: sha1-VSmk1nZUE07cxSZmVoNbD4Ua/O4=, tarball: methods/download/methods-1.1.2.tgz}
     engines: {node: '>= 0.6'}
@@ -5534,6 +5601,14 @@ packages:
       regex-not: 1.0.2
       snapdragon: 0.8.2
       to-regex: 3.0.2
+    dev: true
+
+  /micromatch/4.0.4:
+    resolution: {integrity: sha1-iW1Rnf6dsl/OlM63pQCRm/iB6/k=, tarball: micromatch/download/micromatch-4.0.4.tgz}
+    engines: {node: '>=8.6'}
+    dependencies:
+      braces: 3.0.2
+      picomatch: 2.3.0
     dev: true
 
   /miller-rabin/4.0.1:
@@ -5607,6 +5682,7 @@ packages:
 
   /minimist/1.2.5:
     resolution: {integrity: sha1-Z9ZgFLZqaoqqDAg8X9WN9OTpdgI=, tarball: minimist/download/minimist-1.2.5.tgz}
+    dev: true
 
   /mississippi/3.0.0:
     resolution: {integrity: sha1-6goykfl+C16HdrNj1fChLZTGcCI=, tarball: mississippi/download/mississippi-3.0.0.tgz}
@@ -6723,6 +6799,10 @@ packages:
     resolution: {integrity: sha1-M0WUG0FTy50ILY7uTNogFqmu9/Y=, tarball: querystringify/download/querystringify-2.2.0.tgz}
     dev: true
 
+  /queue-microtask/1.2.3:
+    resolution: {integrity: sha1-SSkii7xyTfrEPg77BYyve2z7YkM=, tarball: queue-microtask/download/queue-microtask-1.2.3.tgz}
+    dev: true
+
   /randombytes/2.1.0:
     resolution: {integrity: sha1-32+ENy8CcNxlzfYpE0mrekc9Tyo=, tarball: randombytes/download/randombytes-2.1.0.tgz}
     dependencies:
@@ -6994,6 +7074,11 @@ packages:
     engines: {node: '>= 4'}
     dev: true
 
+  /reusify/1.0.4:
+    resolution: {integrity: sha1-kNo4Kx4SbvwCFG6QhFqI2xKSXXY=, tarball: reusify/download/reusify-1.0.4.tgz}
+    engines: {iojs: '>=1.0.0', node: '>=0.10.0'}
+    dev: true
+
   /rgb-regex/1.0.1:
     resolution: {integrity: sha1-wODWiC3w4jviVKR16O3UGRX+rrE=, tarball: rgb-regex/download/rgb-regex-1.0.1.tgz}
     dev: true
@@ -7034,6 +7119,12 @@ packages:
   /run-async/2.4.1:
     resolution: {integrity: sha1-hEDsz5nqPnC9QJ1JqriOEMGJpFU=, tarball: run-async/download/run-async-2.4.1.tgz}
     engines: {node: '>=0.12.0'}
+    dev: true
+
+  /run-parallel/1.2.0:
+    resolution: {integrity: sha1-ZtE2jae9+SHrnZW9GpIp5/IaQ+4=, tarball: run-parallel/download/run-parallel-1.2.0.tgz}
+    dependencies:
+      queue-microtask: 1.2.3
     dev: true
 
   /run-queue/1.0.3:
@@ -7773,7 +7864,6 @@ packages:
     dependencies:
       is-number: 7.0.0
     dev: true
-    optional: true
 
   /to-regex/3.0.2:
     resolution: {integrity: sha1-E8/dmzNlUvMLUfM6iuG0Knp1mc4=, tarball: to-regex/download/to-regex-3.0.2.tgz}
@@ -8071,6 +8161,13 @@ packages:
     resolution: {integrity: sha1-4rgApT56Kbk1BsPPQRANFsTErY4=, tarball: vendors/download/vendors-1.0.4.tgz}
     dev: true
 
+  /vite-plugin-copy/0.1.6:
+    resolution: {integrity: sha1-hj7oH3dxsJkSLSS5VHJdjn5gSoA=, tarball: vite-plugin-copy/download/vite-plugin-copy-0.1.6.tgz}
+    engines: {node: '>=14.8.0'}
+    dependencies:
+      fast-glob: 3.2.7
+    dev: true
+
   /vite-plugin-vue2/1.8.2_6dad47b67adb7159003ec3f38cde13e0:
     resolution: {integrity: sha1-e1/Q8BnLpNxvVBNifItwE58J8/4=, tarball: vite-plugin-vue2/download/vite-plugin-vue2-1.8.2.tgz}
     peerDependencies:
@@ -8174,6 +8271,7 @@ packages:
     dependencies:
       hash-sum: 1.0.2
       loader-utils: 1.4.0
+    dev: true
 
   /vue-template-compiler/2.6.14:
     resolution: {integrity: sha1-ovDn2YVnDULJye4NBE/tdpD092M=, tarball: vue-template-compiler/download/vue-template-compiler-2.6.14.tgz}

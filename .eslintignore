@@ -1,3 +1,5 @@
 # Created by .ignore support plugin (hsz.mobi)
 /config/
 /src/assets/
+vite.config.js
+dist/
