@@ -1,4 +1,4 @@
-import {saveFile} from '../utils';
+import { saveFile } from '../utils';
 import defaultTools from '../config/tools';
 
 export default {
@@ -6,72 +6,94 @@ export default {
     props: {
         value: {
             type: [String, Number],
-            default: ''
+            default: '',
         },
-        theme: {// 默认主题
+        theme: {
+            // 默认主题
             type: String,
-            default: 'light'
+            default: 'light',
         },
-        width: {// 初始化宽度
+        width: {
+            // 初始化宽度
             type: [Number, String],
-            default: 'auto'
+            default: 'auto',
         },
-        height: {// 初始化高度
+        height: {
+            // 初始化高度
             type: Number,
-            default: 600
+            default: 600,
         },
-        toolbars: {// 工具栏
+        toolbars: {
+            // 工具栏
             type: Object,
             default() {
                 return {};
-            }
+            },
         },
-        bordered: {//是否有边框
+        bordered: {
+            // 是否有边框
             type: Boolean,
-            default: true
+            default: true,
         },
-        autoSave: {// 是否自动保存
+        autoSave: {
+            // 是否自动保存
             type: Boolean,
-            default: false
+            default: false,
         },
-        interval: {// 自动保存间隔 mm
+        interval: {
+            // 自动保存间隔 mm
             type: Number,
-            default: 10000
+            default: 10000,
         },
-        exportFileName: {// 默认导出文件名称
+        exportFileName: {
+            // 默认导出文件名称
             type: String,
-            default: 'unnamed'
+            default: 'unnamed',
         },
-        markedOptions: {//marked.js配置项
+        markedOptions: {
+            // marked.js配置项
             type: Object,
             default() {
                 return {};
-            }
+            },
         },
-        copyCode: {// 复制代码
+        copyCode: {
+            // 复制代码
             type: Boolean,
-            default: true
+            default: true,
         },
-        copyBtnText: {// 复制代码按钮文字
+        copyBtnText: {
+            // 复制代码按钮文字
             type: String,
-            default: '复制代码'
+            default: '复制代码',
         },
-        isPreview: {//是否是预览模式
+        isPreview: {
+            // 是否是预览模式
             type: Boolean,
-            default: false
-        }
+            default: false,
+        },
+        isUseUpload: {
+            // 是否开启用户的自动上传功能
+            type: Boolean,
+            default: false,
+        },
+        useUploadFn: {
+            // 用户传入的自动上传方法
+            type: Function,
+            default: () => {},
+        },
     },
     data() {
         return {
             currentValue: '', // 输入框内容
             timeoutId: null,
             indexLenth: 1,
-            html: '',// 预览的html
+            html: '', // 预览的html
             preview: false, // 是否是预览状态
-            split: true, //分屏显示
+            split: true, // 分屏显示
             fullscreen: false, // 是否是全屏
             scrollSide: '', // 哪个半栏在滑动
-            lastInsert: '', //最后一次插入的内容
+            lastInsert: '', // 最后一次插入的内容
             timerId: null, // 定时器id
             themeName: '',
             themeSlideDown: false,
@@ -81,76 +103,112 @@ export default {
             editorScrollHeight: 0,
             previewImgModal: false,
             previewImgSrc: '',
-            previewImgMode: ''
+            previewImgMode: '',
         };
     },
     computed: {
         tools() {
-            const {toolbars = {}} = this;
+            const { toolbars = {} } = this;
             return {
                 ...defaultTools,
-                ...toolbars
+                ...toolbars,
             };
-        }
+        },
     },
     methods: {
-        insertLink() {// 插入链接
+        insertLink() {
+            // 插入链接
             this.insertContent('\n[link](href)');
         },
-        insertImage() {// 插入图片
+        insertImage() {
+            // 插入图片
             this.insertContent('\n![image](imgUrl)');
         },
-        insertTable() {// 插入表格
+        insertTable() {
+            // 插入表格
             this.insertContent(
                 '\nheader 1 | header 2\n---|---\nrow 1 col 1 | row 1 col 2\nrow 2 col 1 | row 2 col 2\n\n'
             );
         },
-        handleSave() {// 保存操作
-            const {currentValue, themeName, html} = this;
+        handleSave() {
+            // 保存操作
+            const { currentValue, themeName, html } = this;
             this.$emit('on-save', {
                 theme: themeName,
                 value: currentValue,
-                html
+                html,
             });
         },
-        toggleSlideDown() {// 显示主题选项
+        toggleSlideDown() {
+            // 显示主题选项
             this.slideDown = !this.slideDown;
         },
-        setThemes(name) {// 设置主题
+        setThemes(name) {
+            // 设置主题
             this.themeName = name;
             this.themeSlideDown = false;
             this.$emit('on-theme-change', name);
         },
-        exportFile() {// 导出为.md格式
+        exportFile() {
+            // 导出为.md格式
             saveFile(this.currentValue, this.exportFileName + '.md');
         },
-        importFile(e) {// 导入本地文件
+        importImageFile(e) {
             const file = e.target.files[0];
             if (!file) {
                 return;
             }
-            const {type} = file;
-            if (!['text/markdown', 'text/src'].includes(type)) {
+            if (/image/gi.test(file.type)) {
+                e.preventDefault();
+                if (this.isUseUpload) {
+                    this.useUploadFn(file)
+                        .then((url) => {
+                            this.insertContent(` ![image](${url})`);
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                        });
+                    return;
+                }
+                this.$emit('on-upload-image', file);
+            }
+        },
+        importFile(e) {
+            // 导入本地文件
+            const file = e.target.files[0];
+            if (!file) {
+                return;
+            }
+            // 识别 makedown
+            const fileType =
+                'markdown,mdown,mkdn,md,mkd,mdwn,mdtxt,mdtext,txt,text,Rmd';
+            const makedownType = file.name.replace(/.*\./g, '');
+            const reg = new RegExp(makedownType, 'i');
+            const isMd = reg.test(fileType);
+            if (!isMd) {
+                this.$message.warning('请选择MarkDown格式文件！');
                 return;
             }
             const reader = new FileReader();
             reader.readAsText(file, {
-                encoding: 'utf-8'
+                encoding: 'utf-8',
             });
             reader.onload = () => {
                 this.currentValue = reader.result;
                 e.target.value = '';
-                if (this.pro) {// 专业版，手动set value
+                if (this.pro) {
+                    // 专业版，手动set value
                     this.editor.setOption('value', this.currentValue);
                 }
             };
-            reader.onerror = err => {
+            reader.onerror = (err) => {
                 console.error(err);
-            }
+            };
         },
-        handlePaste(_, e) {// 粘贴图片
-            const {clipboardData = {}} = e;
-            const {types = [], items} = clipboardData;
+        handlePaste(_, e) {
+            // 粘贴图片
+            const { clipboardData = {} } = e;
+            const { types = [], items } = clipboardData;
             let item = null;
             for (let i = 0; i < types.length; i++) {
                 if (types[i] === 'Files') {
@@ -161,16 +219,28 @@ export default {
             if (item) {
                 const file = item.getAsFile();
                 if (/image/gi.test(file.type)) {
-                    this.$emit('on-upload-image', file);
                     e.preventDefault();
+                    if (this.isUseUpload) {
+                        this.useUploadFn(file)
+                            .then((url) => {
+                                this.insertContent(` ![image](${url})`);
+                            })
+                            .catch((error) => {
+                                console.log(error);
+                            });
+                        return;
+                    }
+                    this.$emit('on-upload-image', file);
                 }
             }
         },
-        mousescrollSide(side) {// 设置究竟是哪个半边在主动滑动
+        mousescrollSide(side) {
+            // 设置究竟是哪个半边在主动滑动
             this.scrollSide = side;
         },
-        addImageClickListener() {// 监听查看大图
-            const {imgs = []} = this;
+        addImageClickListener() {
+            // 监听查看大图
+            const { imgs = [] } = this;
             if (imgs.length > 0) {
                 for (let i = 0, len = imgs.length; i < len; i++) {
                     imgs[i].onclick = null;
@@ -186,7 +256,8 @@ export default {
                 }
             }, 600);
         },
-        previewImage(src) {// 预览图片
+        previewImage(src) {
+            // 预览图片
             const img = new Image();
             img.src = src;
             img.onload = () => {
@@ -201,20 +272,33 @@ export default {
                 this.previewImgModal = true;
             };
         },
-        chooseImage() {// 选择图片
+        chooseImage() {
+            // 选择图片
             const input = document.createElement('input');
             input.type = 'file';
             input.accept = 'image/*';
-            input.onchange = ()=>{
-               const files = input.files;
-               if(files[0]){
-                   this.$emit('on-upload-image', files[0]);
-                   input.value = '';
-               }
-            }
+            input.onchange = (e) => {
+                const files = e.path[0].files;
+                if (files[0]) {
+                    e.preventDefault();
+                    if (this.isUseUpload) {
+                        this.useUploadFn(files[0])
+                            .then((url) => {
+                                this.insertContent(` ![image](${url})`);
+                            })
+                            .catch((error) => {
+                                console.log(error);
+                            });
+                        return;
+                    }
+                    this.$emit('on-upload-image', files[0]);
+                    input.value = '';
+                }
+            };
             input.click();
         },
-        addCopyListener() {// 监听复制操作
+        addCopyListener() {
+            // 监听复制操作
             setTimeout(() => {
                 const btns = document.querySelectorAll(
                     '.code-block .copy-code'
@@ -222,7 +306,9 @@ export default {
                 this.btns = btns;
                 for (let i = 0, len = btns.length; i < len; i++) {
                     btns[i].onclick = () => {
-                        const code = btns[i].parentNode.querySelectorAll('pre')[0].innerText;
+                        const code =
+                            btns[i].parentNode.querySelectorAll('pre')[0]
+                                .innerText;
                         const aux = document.createElement('input');
                         aux.setAttribute('value', code);
                         document.body.appendChild(aux);
@@ -233,9 +319,10 @@ export default {
                     };
                 }
             }, 600);
-        }
+        },
     },
-    destroyed() {// 销毁时清除定时器
+    destroyed() {
+        // 销毁时清除定时器
         clearInterval(this.timerId);
-    }
+    },
 };
