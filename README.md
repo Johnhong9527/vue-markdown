@@ -1,4 +1,48 @@
 ## 简介
+ps: 该版本是从[vue-markdown](https://github.com/zhaoxuhui1122/vue-markdown)fork过来。考虑原作者2年未维护。故在其基础上针对公司内部的需求做一些调整。项目包已发布在公司内部的npm私有仓库中，有需要的朋友可以自行针对需要自行fork发布，或者联系我。
+#### [2021-09-25]改动内容：
+* 开发和编译工具统一改为`vite`，并兼容webpack；
+* 针对图片上传方式，在保留原有API基础上，增加通过外部函数传入方式作为用户自定义上传图片的途径；
+
+#### [2021-09-25]新增API
+* isUseUpload: {Booblen:<true|false>}将用户自定义上传图片函数直接传入到编辑器内部
+* useUploadFn:{Function: () => {}}用户自定义的图片上传方式
+
+示例：
+
+与原作者描述的图片上传方式一致。只是处理了返回值，只返回一条图片已上传路径
+```vue
+updateFile(file) {
+  const param = new FormData(); // 创建form对象
+  param.append('file', file); // 通过append向form对象添加数据
+  const config = {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    withCredentials: false,
+  }; // 添加请求头
+  return new Promise((resolve, reject) => {
+    axios
+      .post(
+        '文件上传地址',
+        param,
+        config
+      )
+      .then((response) => {
+        if (response.status === 200) {
+            return resolve( 文件下载路径 );
+        }
+        reject(response);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+},
+```
+
+
+
 一款使用marked和highlight.js开发的一款markdown编辑器，除常见markdown语法外，支持快捷输入、图片粘贴、代码复制、全屏编辑、预览等功能。
 
 使用起来简单方便，只需几行代码，即可在你的页面上引入一个markdown编辑器，编辑区支持像专业编辑器那样。
@@ -61,7 +105,7 @@ import { MarkdownPreview } from 'vue-meditor'
 ```js
 import Markdown from '@/components/markdown/...';
 ```
-专业版 
+专业版
 ```js
 import MarkdownPro from '@/components/markdown/pro';
 ```
@@ -80,7 +124,7 @@ import MarkdownPreview from '@/components/markdown/preview';
 
 <script>
     import Markdown from 'vue-meditor';
-    
+
     export default {
         name: "markdown",
         components: {
@@ -253,11 +297,11 @@ marked配置项,与编辑器内该配置一致。
 编辑器保存事件，自动保存或者手动保存时触发，支持`ctrl+s`或`command+s`触发保存，返回值类型为`Object`，包含当前输入值`value`和选择的代码块主题`theme`。
 
 
-#### on-paste-image	
+#### on-paste-image
 
 监听编辑器粘贴图片事件，在编辑区域内手动粘贴图片时触发，可用于支持粘贴插入图片文件，返回`file`文件，上传文件后可结合`on-ready`事件内返回的`insertContent`插入图片。
 
-#### on-copy 
+#### on-copy
 复制代码块内容，触发时返回当前代码块的text，copyCode开启时才有效。
 
 ## 二次开发
